@@ -91,8 +91,7 @@ namespace Test
             {
                 for (int j = 0; j < primB.Length; j++)
                 {
-                    FermatExtended target = new FermatExtended(BigInteger.Multiply(primA[i], primB[j]), zahlensysteme);
-                    Tuple<BigInteger, BigInteger> actual = target.Run();
+                    var actual = FermatExtended.Run(new BigInteger(primA[i] * primB[j]), zahlensysteme);
                     if (actual.Item1 == primA[i])
                     {
                         Assert.IsTrue(actual.Item1 == primA[i] && actual.Item2 == primB[j], string.Format("Erhalten: '{0}' '{1}'. Erwartet: '{2}' '{3}'.", actual.Item1, actual.Item2, primA[i], primB[j]));
@@ -113,23 +112,29 @@ namespace Test
         [DeploymentItem("Fermat.exe")]
         public void EndgueltigenZyklusBestimmenTest()
         {
-            int[] zahlensysteme = new int[] { 3, 4, 5, 7 };
-            int a = 7;
-            int b = 3;
-
+            int[] zahlensysteme = new int[] 
+            {
+                2, 2*2, 2*2*2, 2*2*2*2, 2*2*2*2*2, 2*2*2*2*2*2, 
+                3, 3*3, 3*3*3, 3*3*3*3, 3*3*3*3*3, 3*3*3*3*3*3,
+                5, 5*5, 5*5*5, 5*5*5*5,
+                7, 7*7, 7*7*7, 7*7*7*7,
+                11, 11*11, 11*11*11,
+                13, 13*13, 13*13*13,              
+            };
+            int a = 29;
+            int b = 31;
 
             // 3, 4, 5, 7, 11, 13, 17, 19, .. 23
-            //int[] zahlensysteme = new int[] { 9, 16, 25, 49, 121, 169, 289, 361 };
-            //int a = 29;
-            //int b = 31;
+            // int[] zahlensysteme = new int[] { 9, 16, 25, 49, 121, 169, 289, 361 };
+            // int a = 29;
+            // int b = 31;
 
-            FermatExtended target = new FermatExtended(a*b, zahlensysteme);
-            Zyklus actual = target.EndgueltigenZyklusBestimmen();
+            Zyklus actual = FermatExtended.EndgueltigenZyklusBestimmen(new BigInteger(a*b), zahlensysteme);
 
             SortZyklus(ref actual, a * b);
 
-            Assert.IsTrue(actual.NumberOfElements== 160);
-            Assert.IsTrue(actual.ZyklusSumme == 3600);
+            Assert.IsTrue(actual.NumberOfElements== 45);
+            Assert.IsTrue(actual.ZyklusSumme == 2310 );
         }
     }
 }

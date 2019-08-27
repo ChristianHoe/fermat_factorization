@@ -17,10 +17,9 @@ namespace Fermat
             // 96763, 96769, 96779, 96787, 96797, 96799, 96821
             BigInteger n =  4339 * 96763;
             
-            FermatExtended f = new FermatExtended(n, new int[] { 5, 7, 11, 13, 17, 16, 19, 23, 27, 29 });
-            Tuple<BigInteger, BigInteger> result = f.Run();
+            var result = FermatExtended.Run(n, new int[] { 5, 7, 11, 13, 17, 16, 19, 23, 27, 29 });
 
-            Console.WriteLine("Lösung lautet: {0} * {1} = {2}", result.Item1, result.Item2, n );
+            Console.WriteLine("Lösung lautet: {0} * {1} = {2}", result.A, result.B, n );
 
         }
     }

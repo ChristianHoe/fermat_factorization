@@ -74,8 +74,8 @@ namespace Test
         {
             int zahlensystem = 10;
             int n = 43 * 971;
-            FermatExtended target = new FermatExtended(n, new int[] { zahlensystem });
-            List<FermatExtended.MddPaarImZahlensystem> actual = (List<FermatExtended.MddPaarImZahlensystem>)target.mdPaareBestimmen();
+
+            List<FermatExtended.MddPaarImZahlensystem> actual = FermatExtended.mdPaareBestimmen(n, new int[] { zahlensystem });
             FermatExtended.MddPaarImZahlensystem expected = this.BerechneMDInternal(n, zahlensystem);
 
 
@@ -98,8 +98,7 @@ namespace Test
 
             FermatExtended.MddPaarImZahlensystem mddPaareImZahlensystem = new FermatExtended.MddPaarImZahlensystem(zahlensystem);
 
-            FermatExtended target = new FermatExtended(n, new int[] { zahlensystem });
-            List<Tuple<int, int>> endungen = target.EndungenBestimmen(zahlensystem);
+            List<Tuple<int, int>> endungen = FermatExtended.EndungenBestimmen(n, zahlensystem);
             
             foreach (Tuple<int, int> endung in endungen)
             {

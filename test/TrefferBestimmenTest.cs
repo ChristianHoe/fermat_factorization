@@ -23,10 +23,10 @@ namespace Test
         public void TrefferBestimmenGrobTest()
         {
             int n = 499 * 41;
-            FermatExtended target = new FermatExtended(n, new int[] { 10 });
-            List<Zyklus> result = target.TrefferBestimmen();
 
-            List<FermatExtended.MddPaarImZahlensystem> paare = target.mdPaareBestimmen();
+            List<Zyklus> result = FermatExtended.TrefferBestimmen(n, new int[] { 10 });
+
+            List<FermatExtended.MddPaarImZahlensystem> paare = FermatExtended.mdPaareBestimmen(n, new int[] { 10 });
 
             List<Tuple<int, int, int>> vergleichsliste = new List<Tuple<int,int, int>>();
 
@@ -60,22 +60,13 @@ namespace Test
             int[] primA = new int[] { 29, 109, 2087, 3253, 6449, 9697 };
             int[] primB = new int[] { 31, 139, 3251, 4799, 7757, 9973 };
 
-            //int erwartetZyklusSumme = 0;
-            //for (int i = 0; i < zahlensysteme.Length; i++)
-            //{
-            //    erwartetZyklusSumme += zahlensysteme[i];
-            //}
-
-
-
             for (int i = 0; i < primA.Length; i++)
             {
                 for (int j = 0; j < primB.Length; j++)
                 {
                     BigInteger n = primA[i] * primB[j];
-                    FermatExtended target = new FermatExtended(n, zahlensysteme);
-                    List<Zyklus> result = target.TrefferBestimmen();
-                    Tuple<BigInteger, bool> wurzel = Helper.Wurzel(n);
+                    List<Zyklus> result = FermatExtended.TrefferBestimmen(n, zahlensysteme);
+                    var wurzel = Helper.Wurzel(n);
 
                     long mExpected = ((long)primA[i] + (long)primB[j]) / 2;
                     for (int k = 0; k < result.Count; k++)

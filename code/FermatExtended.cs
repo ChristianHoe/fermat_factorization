@@ -8,30 +8,20 @@ namespace Fermat
 {
     public class FermatExtended
     {
-        BigInteger n;
-        int[] zahlensysteme;
-
-        public FermatExtended(BigInteger n, int[] zahlensysteme)
+        static public (BigInteger A, BigInteger B) Run(BigInteger n, int[] zahlensysteme)
         {
-            this.n = n;
-            this.zahlensysteme = zahlensysteme;
-        }
-
-        public Tuple<BigInteger, BigInteger> Run()
-        {
-            Tuple<BigInteger, bool> startwert = Helper.Wurzel(this.n);
+            var startwert = Helper.Wurzel(n);
             if (startwert.Item2 == true)
             {
-                // MessageBox.Show(string.Format("Lösung ist die Wurzel {0}", startwert.Item1));
-                Console.WriteLine(string.Format("Lösung ist die Wurzel {0}", startwert.Item1));
-                return new Tuple<BigInteger,BigInteger>(startwert.Item1, startwert.Item1);
+                Console.WriteLine(string.Format("Lösung ist die Wurzel {0}", startwert.Sqrt));
+                return (startwert.Item1, startwert.Item1);
             }
 
-            Zyklus zyklus = this.EndgueltigenZyklusBestimmen();
+            Zyklus zyklus = EndgueltigenZyklusBestimmen(n, zahlensysteme);
 
             zyklus.Sort();
 
-            Tuple<BigInteger, bool> ergebnisDerWurzel;
+            (BigInteger, bool) ergebnisDerWurzel;
             BigInteger offset = BigInteger.Add(startwert.Item1, 1);
             while (true)
             {
@@ -45,24 +35,18 @@ namespace Fermat
                     {
                         BigInteger a = BigInteger.Add(BigInteger.Add(offset, zyklus.Elemente[i]), ergebnisDerWurzel.Item1);
                         BigInteger b = BigInteger.Subtract(BigInteger.Add(offset, zyklus.Elemente[i]), ergebnisDerWurzel.Item1);
-                        //MessageBox.Show(string.Format("Lösung lautet: {0} * {1} = {2} == {3}", a, b, BigInteger.Subtract(BigInteger.Pow(BigInteger.Add(offset, zyklus.Elemente[i]), 2), BigInteger.Pow(ergebnisDerWurzel.Item1, 2)), this.n));
-                        return new Tuple<BigInteger, BigInteger>(a, b);
+
+                        return (a, b);
                     }
                 }
-
-                //if (offset > 1000000)
-                //{
-                //    MessageBox.Show("Notbremse");
-                //    return null;
-                //}
                     
                 offset = BigInteger.Add(offset, zyklus.ZyklusSumme);
             }
         }
 
-        public Zyklus EndgueltigenZyklusBestimmen()
+        static public Zyklus EndgueltigenZyklusBestimmen(BigInteger n, int[] zahlensysteme)
         {
-            List<Zyklus> zyklen = this.TrefferBestimmen();
+            List<Zyklus> zyklen = TrefferBestimmen(n, zahlensysteme);
 
 
             Zyklus endgueltigerZyklus = zyklen[0];
@@ -91,14 +75,14 @@ namespace Fermat
         }
 
 
-        public List<MddPaarImZahlensystem> mdPaareBestimmen()
+        static public List<MddPaarImZahlensystem> mdPaareBestimmen(BigInteger n, int[] zahlensysteme)
         {
             List<MddPaarImZahlensystem> mddPaare = new List<MddPaarImZahlensystem>();
 
             Console.WriteLine("Potentielle zu prüfende Zahlen");
             Console.WriteLine("HIT / MAX = Komprimierung");
 
-            foreach (int zahlensystem in this.zahlensysteme)
+            foreach (int zahlensystem in zahlensysteme)
             {
                 int m;
                 int d1;
@@ -108,7 +92,7 @@ namespace Fermat
 
                 MddPaarImZahlensystem mddPaareImZahlensystem = new MddPaarImZahlensystem(zahlensystem);
                 
-                List<Tuple<int, int>> endungen = this.EndungenBestimmen(zahlensystem);
+                List<Tuple<int, int>> endungen = EndungenBestimmen(n, zahlensystem);
                 foreach (Tuple<int, int> endung in endungen)
                 {
                     // aller Wahrscheinlichkeit nach reichen zwei Überprüfungen
@@ -142,16 +126,16 @@ namespace Fermat
             return mddPaare;
         }
 
-        public List<Zyklus> TrefferBestimmen()
+        static public List<Zyklus> TrefferBestimmen(BigInteger n, int[] zahlensysteme)
         {
             List<Zyklus> result = new List<Zyklus>();
 
-            List<MddPaarImZahlensystem> mdPaare = this.mdPaareBestimmen();
+            List<MddPaarImZahlensystem> mdPaare = mdPaareBestimmen(n, zahlensysteme);
 
             // Triviale Lösung wird an anderer Stelle geprüft
-            Tuple<BigInteger, bool> startwert = Helper.Wurzel(this.n);
+            var startwert = Helper.Wurzel(n);
 
-            int maxSequenz = this.zahlensysteme.Max() * this.zahlensysteme.Max();
+            int maxSequenz = zahlensysteme.Max() * zahlensysteme.Max();
             BigInteger[] arbeitsSequenzM_ = new BigInteger[maxSequenz+1];
             BigInteger[] arbeitsSequenzDD = new BigInteger[maxSequenz+1];
 
@@ -161,7 +145,7 @@ namespace Fermat
 
             // Sequenz einmalig berechnen
             arbeitsSequenzM_[0] = m;
-            arbeitsSequenzDD[0] = BigInteger.Subtract(BigInteger.Pow(m, 2), this.n);
+            arbeitsSequenzDD[0] = BigInteger.Subtract(BigInteger.Pow(m, 2), n);
 
             for (int i = 1; i <= maxSequenz; i++)
             {
@@ -207,12 +191,9 @@ namespace Fermat
         /// Wobei dies nur für die letzten Stellen betrachtet wird
         /// </summary>
         /// <param name="zahlensystem"></param>
-        public List<Tuple<int, int>> EndungenBestimmen(int zahlensystem)
+        static public List<Tuple<int, int>> EndungenBestimmen(BigInteger n, int zahlensystem)
         {
-            //int potenz = zahlensystem * zahlensystem;
-
-            BigInteger sh;
-            BigInteger.DivRem(n, zahlensystem, out sh);
+            BigInteger.DivRem(n, zahlensystem, out BigInteger sh);
             int vergleichswert = (int)sh;
 
             List<Tuple<int, int>> result = new List<Tuple<int, int>>();

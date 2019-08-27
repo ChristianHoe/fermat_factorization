@@ -13,11 +13,11 @@ namespace Fermat
             // Recht willkürlich
             BigInteger kleinsterNichterwarteterTeiler = new BigInteger(19);
 
-            Tuple<BigInteger, bool> startwertM = Wurzel(n);
+            var startwertM = Wurzel(n);
             
             BigInteger endwertM = BigInteger.Divide(BigInteger.Add(BigInteger.Divide(n, kleinsterNichterwarteterTeiler), kleinsterNichterwarteterTeiler), 2);
 
-            return BigInteger.Subtract(endwertM, startwertM.Item1);
+            return BigInteger.Subtract(endwertM, startwertM.Sqrt);
         }
 
 
@@ -25,7 +25,7 @@ namespace Fermat
         /// 
         /// </summary>
         /// <returns>Rest vorhanden?</returns>
-        static public Tuple<BigInteger, bool> Wurzel(BigInteger value)
+        static public (BigInteger Sqrt, bool HasRemainder) Wurzel(BigInteger value)
         {
             BigInteger a = BigInteger.One;
             BigInteger b = (value >> 5) + 8;
@@ -46,8 +46,7 @@ namespace Fermat
 
             BigInteger sqrt = BigInteger.Subtract(a, BigInteger.One);
 
-            Tuple<BigInteger, bool> result = new Tuple<BigInteger, bool>(sqrt, BigInteger.Pow(sqrt, 2).CompareTo(value) == 0);
-            return result;
+            return (sqrt, BigInteger.Pow(sqrt, 2).CompareTo(value) == 0);
         }
     }
 }

@@ -84,9 +84,7 @@ namespace Test
         {
             int potenz = zahlensystem;
 
-            FermatExtended target = new FermatExtended(n, new int[] { zahlensystem });
-
-            List<Tuple<int, int>> actual = target.EndungenBestimmen(zahlensystem);
+            List<Tuple<int, int>> actual = FermatExtended.EndungenBestimmen(n, zahlensystem);
 
             BigInteger sh;
             BigInteger.DivRem(n, potenz, out sh);

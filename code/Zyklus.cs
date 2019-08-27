@@ -117,15 +117,9 @@ namespace Fermat
             long differenz = zyklus.Elemente[1] - zyklus.Elemente[0];
 
             // Sucht ab dem zweiten Element nach einem Element, welches den gleichen Wert wie das Erste hat.
-            // -> In dem Fall wird geschaut, ob alle folgenden Elemente gilt: E[X] == E[X+c] 
+            // -> In dem Fall wird geschaut, ob alle folgenden Elemente gilt: E[i] == E[i+offset] 
             for (int i = 2; i < alteAnzahlDerElemente; i++)
             {
-                //if (zyklus.Elemente[i] != (zyklus.Elemente[i % neueZyklusLaenge]))
-                //{
-                //    neueZyklusLaenge = i+1;
-                //}
-
-
                 if (zyklus.Elemente[i] != (zyklus.Elemente[i - neueAnzahlDerElemente] + differenz))
                 {
                     neueAnzahlDerElemente = i;
@@ -144,24 +138,21 @@ namespace Fermat
             {
                 return;
             }
-            else
-            {
-                // Zyklus ist keine "sinnvoll teilbare" Teilmenge
-                // Bsp: [7 5 8 8 7 5]
-                if (alteAnzahlDerElemente % neueAnzahlDerElemente != 0)
-                {
-                    return;
-                }
-                else
-                {
-                    Console.WriteLine($"Zyklus komprimiert: {zyklus.ZyklusSumme} : {alteAnzahlDerElemente} -> {neueAnzahlDerElemente}");
 
-                    zyklus.Truncate(neueAnzahlDerElemente);
-                    //zyklus.Elemente.RemoveRange(neueAnzahlDerElemente, alteAnzahlDerElemente - neueAnzahlDerElemente);
-                    zyklus.ZyklusSumme = (zyklus.ZyklusSumme * neueAnzahlDerElemente) / alteAnzahlDerElemente;
-                    return;
-                }
+            // Zyklus ist keine "sinnvoll teilbare" Teilmenge
+            // Bsp: [7 5 8 8 7 5]
+            if (alteAnzahlDerElemente % neueAnzahlDerElemente != 0)
+            {
+                return;
             }
+
+            Console.WriteLine($"Zyklus komprimiert: {zyklus.ZyklusSumme} : {alteAnzahlDerElemente} -> {neueAnzahlDerElemente}");
+            Console.WriteLine($"[{string.Join(",", zyklus.Elemente)}]");
+
+            zyklus.Truncate(neueAnzahlDerElemente);
+            zyklus.ZyklusSumme = (zyklus.ZyklusSumme * neueAnzahlDerElemente) / alteAnzahlDerElemente;
+
+            return;
         }
 
         /// <summary>

@@ -64,9 +64,7 @@ namespace Test
         [TestMethod]
         public void Wurzel15Test()
         {
-            Tuple<BigInteger,bool> result = null;
-            
-            result = Helper.Wurzel(15);
+            var result = Helper.Wurzel(15);
             Assert.AreEqual<BigInteger>(3, result.Item1, "");
             Assert.IsFalse(result.Item2);
 
